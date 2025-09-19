@@ -1,43 +1,49 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-import Input from '../components/Input';
-import Button from '../components/Button';
-import Card from '../components/Card';
-import '../styles/LoginPage.css';
-import AppLogo from '../assets/Icons/Logo.png';
+import Input from "../components/Input";
+import Button from "../components/Button";
+import Card from "../components/Card";
+import "../styles/LoginPage.css";
+import AppLogo from "../assets/Icons/Logo.png";
 
-import { loginUser } from '../services/authService';
+import { loginUser } from "../services/authService";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
+    setError("");
 
     try {
       const responseData = await loginUser({ username, password });
 
       if (responseData.access) {
         // Guardamos el token de acceso en localStorage
-        localStorage.setItem('authToken', responseData.access);
-        // También el refresh token si lo quieres usar más adelante
-        localStorage.setItem('refreshToken', responseData.refresh);
+        localStorage.setItem("authToken", responseData.access);
 
-        alert('¡Inicio de sesión exitoso!');
-        navigate('/dashboard');
+        // También el refresh token si lo quieres usar más adelante
+        localStorage.setItem("refreshToken", responseData.refresh);
+
+        alert("¡Inicio de sesión exitoso!");
+
+        navigate("/dashboard");
+        window.location.reload();
       } else {
-        setError(responseData.mensaje || 'Respuesta inesperada del servidor.');
+        setError(responseData.mensaje || "Respuesta inesperada del servidor.");
       }
     } catch (err) {
-      console.error('Error en handleLogin:', err.message);
-      setError(err.message || 'Error al iniciar sesión. Verifica tu usuario y contraseña.');
+      console.error("Error en handleLogin:", err.message);
+      setError(
+        err.message ||
+          "Error al iniciar sesión. Verifica tu usuario y contraseña."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -49,24 +55,27 @@ const LoginPage = () => {
         <Card
           title={
             <div className="login-logo-container">
-              <img src={AppLogo} alt="SmartTime Logo" className="login-logo-image" />
+              <img
+                src={AppLogo}
+                alt="SmartTime Logo"
+                className="login-logo-image"
+              />
               <span className="login-app-name">SmartTime</span>
             </div>
           }
           className="login-form-card"
         >
           <h2 className="login-page-title">Iniciar Sesión</h2>
-
-          <Button variant="google" fullWidth className="login-google-button">
-            Continuar con Google
-          </Button>
-
+          {/*
+            <Button variant="google" fullWidth className="login-google-button">
+              Continuar con Google
+            </Button>
+          
           <div className="login-divider-container">
             <hr className="login-divider-line" />
             <span className="login-divider-text">O con su cuenta</span>
             <hr className="login-divider-line" />
-          </div>
-
+          </div> */}
           <form onSubmit={handleLogin} className="login-form">
             <Input
               label="Usuario"
@@ -88,11 +97,11 @@ const LoginPage = () => {
 
             {error && <p className="login-form-error-message">{error}</p>}
 
-            <div className="login-forgot-password">
+            {/*<div className="login-forgot-password">
               <Link to="/forgot-password" className="login-link">
                 ¿Olvidó su contraseña?
               </Link>
-            </div>
+            </div>*/}
 
             <Button
               type="submit"
@@ -101,12 +110,11 @@ const LoginPage = () => {
               className="login-submit-button"
               disabled={isLoading}
             >
-              {isLoading ? 'Ingresando...' : 'Iniciar Sesión'}
+              {isLoading ? "Ingresando..." : "Iniciar Sesión"}
             </Button>
           </form>
-
           <p className="login-signup-prompt">
-            ¿Aún no eres miembro?{' '}
+            ¿Aún no eres miembro?{" "}
             <Link to="/register" className="login-link">
               Regístrate
             </Link>

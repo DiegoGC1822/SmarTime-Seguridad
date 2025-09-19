@@ -24,6 +24,9 @@ import Layout from "./components/Layout";
 import StatsPage from "./pages/StatsPage";
 import AntiProPage from "./pages/AntiProPage";
 
+//Hook
+import useExtensionCheck from "./hooks/useExtensionCheck";
+
 // Página para rutas no encontradas
 const NotFoundPagePlaceholder = () => (
   <div className="page-placeholder">
@@ -54,11 +57,12 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
+  const extensionInstalled = useExtensionCheck();
   return (
     <Router>
       <Routes>
         {/* Rutas públicas */}
-         <Route path="/" element={<Navigate to="/landing" replace />} />
+        <Route path="/" element={<Navigate to="/landing" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -79,9 +83,12 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
-          <Route path="/anti-procrastination" element={<AntiProPage />} />
-          <Route path="/tasks" element={<TasksPage/>} />
-          <Route path="/analytics" element={<StatsPage />} />  
+          <Route
+            path="/anti-procrastination"
+            element={<AntiProPage extensionInstalled={extensionInstalled} />}
+          />
+          <Route path="/tasks" element={<TasksPage />} />
+          <Route path="/analytics" element={<StatsPage />} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
         </Route>
 

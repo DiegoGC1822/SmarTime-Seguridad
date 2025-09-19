@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "Apps.Notificacion",
     "Apps.Usuarios",
     "Apps.Gamificacion",
+    "Apps.Antiprocrastinacion",
 ]
 
 AUTH_USER_MODEL = "Autenticacion.UsuarioPersonalizado"

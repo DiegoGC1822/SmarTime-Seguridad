@@ -3,15 +3,21 @@
   "description": "Extensión que bloquea páginas distractoras como TikTok, Facebook e Instagram.",
   "version": "1.0",
   "manifest_version": 3,
-  "permissions": ["webRequest", "webRequestBlocking"],
-  "host_permissions": [
-    "*://*.tiktok.com/*",
-    "*://*.facebook.com/*",
-    "*://*.instagram.com/*"
-  ],
+  "permissions": ["declarativeNetRequest", "storage"],
+  "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js"
   },
+  "externally_connectable": {
+    "matches": ["http://localhost:3000/*"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://localhost:3000/*"],
+      "js": ["content.js"]
+    }
+  ],
+
   "icons": {
     "128": "image.png"
   }
