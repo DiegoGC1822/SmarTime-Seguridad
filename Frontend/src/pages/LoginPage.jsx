@@ -34,7 +34,6 @@ const LoginPage = () => {
         alert("¡Inicio de sesión exitoso!");
 
         navigate("/dashboard");
-        window.location.reload();
       } else {
         setError(responseData.mensaje || "Respuesta inesperada del servidor.");
       }

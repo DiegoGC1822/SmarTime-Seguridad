@@ -148,6 +148,13 @@ USE_I18N = True
 
 USE_TZ = False
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-login-cache",
+    }
+}
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -193,6 +200,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React dev server
     "https://smartime-production-35f3.up.railway.app",  # URL de producción
+    "http://localhost:5173",  # Vite dev server
 ]
 
 

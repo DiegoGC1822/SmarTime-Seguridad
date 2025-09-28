@@ -2,17 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../styles/SettingsPage.css";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import config from "../config";
-
-const userService = config.USE_MOCK_USER_SERVICE
-  ? require("../services/userService.mock")
-  : require("../services/userService");
-
-const {
-  getUserProfile,
-  updateUserProfile,
-  // updateUserPreferences, // ❌ Eliminado, ya no usamos backend para preferencias
-} = userService;
+import { updateUserProfile, getUserProfile } from "../services/userService";
 
 const EditProfileSection = () => {
   const sectionClasses = "settings-edit-profile-section";

@@ -18,6 +18,9 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import send_mail
 from django.conf import settings
+from django.core.cache import cache
+from django.utils import timezone
+from datetime import timedelta
 import os
 
 
@@ -32,14 +35,40 @@ class RegistroUsuarioAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+MAX_INTENTOS = 5
+BLOQUEO_SEGUNDOS = 30
+
+
 class LoginUsuarioAPIView(APIView):
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
 
-        usuario = authenticate(username=username, password=password)
-        if usuario:
-            refresh = RefreshToken.for_user(usuario)
+        # claves únicas en cache por usuario
+        intentos_key = f"login_attempts_{username}"
+        bloqueo_key = f"login_blocked_{username}"
+
+        # verificar si está bloqueado
+        bloqueo_hasta = cache.get(bloqueo_key)
+        ahora = timezone.now()
+
+        if bloqueo_hasta and bloqueo_hasta > ahora:
+            segundos_restantes = int((bloqueo_hasta - ahora).total_seconds())
+            return Response(
+                {
+                    "error": f"Cuenta bloqueada. Intenta de nuevo en {segundos_restantes} segundos."
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # intentar login
+        user = authenticate(username=username, password=password)
+        if user:
+            # resetear intentos
+            cache.delete(intentos_key)
+            cache.delete(bloqueo_key)
+
+            refresh = RefreshToken.for_user(user)
             return Response(
                 {
                     "mensaje": "Login exitoso",
@@ -49,6 +78,22 @@ class LoginUsuarioAPIView(APIView):
                 status=status.HTTP_200_OK,
             )
         else:
+            # aumentar intentos fallidos
+            intentos = cache.get(intentos_key, 0) + 1
+            cache.set(intentos_key, intentos, timeout=BLOQUEO_SEGUNDOS)
+
+            if intentos >= MAX_INTENTOS:
+                # bloquear usuario
+                bloqueo_hasta = ahora + timedelta(seconds=BLOQUEO_SEGUNDOS)
+                cache.set(bloqueo_key, bloqueo_hasta, timeout=BLOQUEO_SEGUNDOS)
+                cache.delete(intentos_key)
+                return Response(
+                    {
+                        "error": f"Has excedido los intentos. Intenta en {BLOQUEO_SEGUNDOS} segundos."
+                    },
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+
             return Response(
                 {"error": "Credenciales incorrectas"},
                 status=status.HTTP_401_UNAUTHORIZED,

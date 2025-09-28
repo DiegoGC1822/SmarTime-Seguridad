@@ -142,8 +142,6 @@ const Calendar = () => {
       startTime: formatToHHMM(task.horaInicio || task.horaEntrega),
     };
 
-    console.log(task);
-
     switch (type) {
       case "Tarea":
         return {

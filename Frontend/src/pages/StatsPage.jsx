@@ -15,7 +15,7 @@ import starImg from "../assets/Icons/star.png";
 import { PieChart, Pie, Cell, Legend } from "recharts";
 import "../styles/StatsPage.css";
 
-const API_BASE = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000/";
+const API_BASE = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/";
 
 const StatsPage = () => {
   // Estado para tareas completadas/pendientes
@@ -43,8 +43,6 @@ const StatsPage = () => {
       .catch(() => setTareasStats(null));
   }, []);
 
-  console.log("Tareas Stats:", tareasStats);
-
   // Cargar historial de estrellas (todas las semanas)
   useEffect(() => {
     axios
@@ -68,8 +66,6 @@ const StatsPage = () => {
       .then((res) => setEstadoTareas(res.data))
       .catch(() => setEstadoTareas(null));
   }, []);
-
-  console.log("Estado Tareas:", estadoTareas);
 
   // Filtrar historial de estrellas por fechas seleccionadas
   const estrellasFiltradas = historialEstrellas.filter((item) => {
