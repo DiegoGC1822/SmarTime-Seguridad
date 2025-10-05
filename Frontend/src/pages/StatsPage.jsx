@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SummaryCard from "../components/SummaryCard";
 import {
   BarChart,
@@ -12,7 +12,7 @@ import {
 } from "recharts";
 import axios from "axios";
 import starImg from "../assets/Icons/star.png";
-import { PieChart, Pie, Cell, Legend } from "recharts";
+import { PieChart, Pie, Cell } from "recharts";
 import "../styles/StatsPage.css";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/";

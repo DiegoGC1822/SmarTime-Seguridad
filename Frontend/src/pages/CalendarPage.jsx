@@ -1,5 +1,5 @@
 // CalendarPage.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import TaskForm from "../components/TaskForm";
 import CalendarDay from "../components/CalendarDay";
 import ActivityModal from "../components/ActivityModal";
@@ -127,6 +127,7 @@ const Calendar = () => {
     };
 
     fetchActivities();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleOptionClick = (type) => {
@@ -269,7 +270,7 @@ const Calendar = () => {
       let frontendTask = null;
 
       switch (selectedType) {
-        case "Tarea":
+        case "Tarea": {
           newTask = await createTarea({
             titulo: taskData.title,
             curso: taskData.course,
@@ -287,8 +288,9 @@ const Calendar = () => {
             horaInicio: tareaBackend.horaInicio || tareaBackend.horaEntrega,
           });
           break;
+        }
 
-        case "Estudio":
+        case "Estudio": {
           newTask = await createEstudio({
             titulo: taskData.title,
             curso: taskData.course,
@@ -300,8 +302,9 @@ const Calendar = () => {
           const estudioBackend = newTask.estudio;
           frontendTask = mapToFrontendTask("Estudio", estudioBackend);
           break;
+        }
 
-        case "Clase":
+        case "Clase": {
           newTask = await createClase({
             curso: taskData.course,
             descripcion: taskData.description,
@@ -314,8 +317,9 @@ const Calendar = () => {
           const claseBackend = newTask.clase;
           frontendTask = mapToFrontendTask("Clase", claseBackend);
           break;
+        }
 
-        case "Act. no académica":
+        case "Act. no académica": {
           newTask = await createActividadNoAcademica({
             titulo: taskData.title,
             descripcion: taskData.description,
@@ -328,10 +332,12 @@ const Calendar = () => {
           const actBackend = newTask.actividad;
           frontendTask = mapToFrontendTask("Act. no académica", actBackend);
           break;
+        }
 
-        default:
+        default: {
           console.warn("Tipo no manejado:", selectedType);
           return;
+        }
       }
 
       const allTasks = [frontendTask];

@@ -7,5 +7,5 @@ export const getUserProfile = async () => ({
 });
 
 export const updateUserProfile = async (data) => data;
-export const updateProfilePicture = async (formData) => ({ success: true });
-export const updateUserPreferences = async (prefs) => prefs;
+export const updateProfilePicture = async () => ({ success: true });
+export const updateUserPreferences = async (prefs) => prefs;
