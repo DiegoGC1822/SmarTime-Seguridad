@@ -23,7 +23,7 @@ from Apps.Notificacion.utils import sugerencia_actividad, verificar_sobrecarga
 
 # ViewSet para Tareas
 class TareaViewSet(viewsets.ModelViewSet):
-    queryset = Tarea.objects.select_related('estado_actual').all()
+    queryset = Tarea.objects.select_related("estado_actual").all()
     serializer_class = TareaSerializer
     permission_classes = [IsAuthenticated]
 

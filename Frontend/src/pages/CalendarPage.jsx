@@ -37,6 +37,7 @@ const Calendar = () => {
   const [selectedType, setSelectedType] = useState("");
   const [tasks, setTasks] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [errorMessage, setErrorMessage] = useState("");
   const toggleOptions = () => setShowOptions(!showOptions);
   const generateId = () => "_" + Math.random().toString(36).substr(2, 9);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -216,6 +217,7 @@ const Calendar = () => {
               horaFin: taskData.endTime,
               complejidad: taskData.complexity,
             });
+            setShowTaskForm(false);
             break;
           case "Estudio":
             await updateEstudio(selectedTask.id, {
@@ -226,6 +228,7 @@ const Calendar = () => {
               horaInicio: taskData.hInicio,
               horaFin: taskData.hFin,
             });
+            setShowTaskForm(false);
             break;
           case "Clase":
             await updateClase(selectedTask.id, {
@@ -237,6 +240,7 @@ const Calendar = () => {
               repetir: taskData.repetir,
               semanas: taskData.semanas,
             });
+            setShowTaskForm(false);
             break;
           case "Act. no académica":
             await updateActividadNoAcademica(selectedTask.id, {
@@ -248,6 +252,7 @@ const Calendar = () => {
               repetir: taskData.repetir,
               semanas: taskData.semanas,
             });
+            setShowTaskForm(false);
             break;
           default:
             console.warn("Tipo no manejado:", selectedType);
@@ -271,66 +276,107 @@ const Calendar = () => {
 
       switch (selectedType) {
         case "Tarea": {
-          newTask = await createTarea({
-            titulo: taskData.title,
-            curso: taskData.course,
-            descripcion: taskData.description,
-            fechaEntrega: taskData.deliveryDate,
-            horaEntrega: taskData.deliveryTime,
-            fechaRealizacion: taskData.realizationDate,
-            horaInicio: taskData.startTime,
-            horaFin: taskData.endTime,
-            complejidad: taskData.complexity,
-          });
-          const tareaBackend = newTask.tarea;
-          frontendTask = mapToFrontendTask("Tarea", {
-            ...tareaBackend,
-            horaInicio: tareaBackend.horaInicio || tareaBackend.horaEntrega,
-          });
+          try {
+            newTask = await createTarea({
+              titulo: taskData.title,
+              curso: taskData.course,
+              descripcion: taskData.description,
+              fechaEntrega: taskData.deliveryDate,
+              horaEntrega: taskData.deliveryTime,
+              fechaRealizacion: taskData.realizationDate,
+              horaInicio: taskData.startTime,
+              horaFin: taskData.endTime,
+              complejidad: taskData.complexity,
+            });
+            const tareaBackend = newTask.tarea;
+            frontendTask = mapToFrontendTask("Tarea", {
+              ...tareaBackend,
+              horaInicio: tareaBackend.horaInicio || tareaBackend.horaEntrega,
+            });
+            setErrorMessage("");
+            setShowTaskForm(false);
+          } catch (error) {
+            console.log("Error creando tarea:", error);
+            setErrorMessage(
+              error.response.data.error || "Error al crear la tarea."
+            );
+            return;
+          }
           break;
         }
 
         case "Estudio": {
-          newTask = await createEstudio({
-            titulo: taskData.title,
-            curso: taskData.course,
-            temas: taskData.temas,
-            fecha: taskData.fecha,
-            horaInicio: taskData.hInicio,
-            horaFin: taskData.hFin,
-          });
-          const estudioBackend = newTask.estudio;
-          frontendTask = mapToFrontendTask("Estudio", estudioBackend);
+          try {
+            newTask = await createEstudio({
+              titulo: taskData.title,
+              curso: taskData.course,
+              temas: taskData.temas,
+              fecha: taskData.fecha,
+              horaInicio: taskData.hInicio,
+              horaFin: taskData.hFin,
+            });
+            const estudioBackend = newTask.estudio;
+            frontendTask = mapToFrontendTask("Estudio", estudioBackend);
+            setErrorMessage("");
+            setShowTaskForm(false);
+          } catch (error) {
+            console.log("Error creando estudio:", error);
+            setErrorMessage(
+              error.response.data.error || "Error al crear el estudio."
+            );
+            return;
+          }
           break;
         }
 
         case "Clase": {
-          newTask = await createClase({
-            curso: taskData.course,
-            descripcion: taskData.description,
-            fecha: taskData.fecha,
-            horaInicio: taskData.hInicio,
-            horaFin: taskData.hFin,
-            repetir: taskData.repetir,
-            semanas: taskData.semanas,
-          });
-          const claseBackend = newTask.clase;
-          frontendTask = mapToFrontendTask("Clase", claseBackend);
+          try {
+            newTask = await createClase({
+              curso: taskData.course,
+              descripcion: taskData.description,
+              fecha: taskData.fecha,
+              horaInicio: taskData.hInicio,
+              horaFin: taskData.hFin,
+              repetir: taskData.repetir,
+              semanas: taskData.semanas,
+            });
+            const claseBackend = newTask.clase;
+            frontendTask = mapToFrontendTask("Clase", claseBackend);
+            setErrorMessage("");
+            setShowTaskForm(false);
+          } catch (error) {
+            console.log("Error creando clase:", error);
+            setErrorMessage(
+              error.response.data.error || "Error al crear la clase."
+            );
+            return;
+          }
           break;
         }
 
         case "Act. no académica": {
-          newTask = await createActividadNoAcademica({
-            titulo: taskData.title,
-            descripcion: taskData.description,
-            fecha: taskData.fecha,
-            horaInicio: taskData.hInicio,
-            horaFin: taskData.hFin,
-            repetir: taskData.repetir,
-            semanas: taskData.semanas,
-          });
-          const actBackend = newTask.actividad;
-          frontendTask = mapToFrontendTask("Act. no académica", actBackend);
+          try {
+            newTask = await createActividadNoAcademica({
+              titulo: taskData.title,
+              descripcion: taskData.description,
+              fecha: taskData.fecha,
+              horaInicio: taskData.hInicio,
+              horaFin: taskData.hFin,
+              repetir: taskData.repetir,
+              semanas: taskData.semanas,
+            });
+            const actBackend = newTask.actividad;
+            frontendTask = mapToFrontendTask("Act. no académica", actBackend);
+            setErrorMessage("");
+            setShowTaskForm(false);
+          } catch (error) {
+            console.log("Error creando actividad no académica:", error);
+            setErrorMessage(
+              error.response.data.error ||
+                "Error al crear la actividad no académica."
+            );
+            return;
+          }
           break;
         }
 
@@ -500,10 +546,14 @@ const Calendar = () => {
 
       {showTaskForm && (
         <TaskForm
-          onClose={() => setShowTaskForm(false)}
           onSave={handleSaveTask}
+          onClose={() => {
+            setShowTaskForm(false);
+            setErrorMessage("");
+          }}
           type={selectedType}
           initialData={selectedTask}
+          ErrorMessage={errorMessage}
         />
       )}
 
