@@ -220,6 +220,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "smartime-production.up.railway.app",
+    "smartime-seguridad.onrender.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
