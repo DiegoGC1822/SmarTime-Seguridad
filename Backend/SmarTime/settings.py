@@ -199,14 +199,10 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React dev server
-    "https://smartime-production-35f3.up.railway.app",  # URL de producción
+    "https://smartime-production-35f3.up.railway.app",  # URL de producción Railway
     "http://localhost:5173",  # Vite dev server
+    "https://smartime-seguridad.vercel.app",  # URL de producción Vercel
 ]
-
-
-# CORS_ALLOWED_ORIGINS = [
-#    "http://localhost:3000",  # React por defecto
-# ]
 
 # El email se mostrará en la consola, simulando el envío
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -226,4 +222,5 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000/",
     "https://smartime-production.up.railway.app",
+    "https://smartime-seguridad.onrender.com",
 ]
