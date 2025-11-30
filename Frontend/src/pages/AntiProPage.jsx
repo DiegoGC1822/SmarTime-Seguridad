@@ -14,8 +14,6 @@ const AntiProPage = ({ extensionInstalled }) => {
   const [minutes, setMinutes] = useState("00");
   const [remainingTime, setRemainingTime] = useState(null);
 
-  const authToken = localStorage.getItem("authToken");
-
   useEffect(() => {
     const fetchConfig = async () => {
       try {
@@ -62,7 +60,11 @@ const AntiProPage = ({ extensionInstalled }) => {
     if (!isActive && totalSeconds > 0) {
       setRemainingTime(totalSeconds);
       window.postMessage(
-        { type: "ACTIVATE", duration: totalSeconds, token: authToken },
+        {
+          type: "ACTIVATE",
+          duration: totalSeconds,
+          urls: blockedSites,
+        },
         "*"
       );
     } else {
